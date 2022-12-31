@@ -12,8 +12,8 @@ const Contacts = ({ contacts, changeChat }) => {
       const data = await JSON.parse(
         localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
       );
-      setCurrentUserName(data.username);
-      setCurrentUserImage(data.avatarImage);
+      setCurrentUserName(data?.username);
+      setCurrentUserImage(data?.avatarImage);
     }
     fetchData();
   }, []);
