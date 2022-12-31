@@ -2,7 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ChatContainer from "../componets/ChatContainer";
 import Contacts from "../componets/Contacts";
+import Welcome from "../componets/Welcome";
 
 import { allUsersRoute } from "../utils/APIRoutes";
 
@@ -10,6 +12,7 @@ const Chat = () => {
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat, setCurrentChat] = useState(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +25,7 @@ const Chat = () => {
             localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
           )
         );
+        setIsLoaded(true);
       }
     }
     handleUser();
@@ -31,7 +35,7 @@ const Chat = () => {
     async function handleUser() {
       if (currentUser) {
         if (currentUser.isAvatarImageSet) {
-          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          const data = await axios.get(`${allUsersRoute}/${currentUser?._id}`);
           setContacts(data.data);
         } else {
           navigate("/setAvatar");
@@ -53,6 +57,11 @@ const Chat = () => {
           currentUser={currentUser}
           changeChat={handleCurrentChat}
         />
+        {isLoaded && currentChat === undefined ? (
+          <Welcome currentUser={currentUser} />
+        ) : (
+          <ChatContainer currentChat={currentChat} currentUser={currentUser} />
+        )}
       </div>
     </Container>
   );
